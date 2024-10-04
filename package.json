@@ -1,0 +1,15 @@
+{
+  "name": "yt-project",
+  "version": "1.0.0",
+  "description": "youtube backend learning project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "backend",
+    "youtube"
+  ],
+  "author": "ayush kumar",
+  "license": "ISC"
+}
