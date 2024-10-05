@@ -11,9 +11,19 @@
  * 
  */
 
-const asyncHandler = (requestHandler) =>{
+export const asyncHandler = (requestHandler) =>{
     return (req, res, next) => Promise.resolve(requestHandler(req, res, next)).catch(err => next(err))
 }
+
+//! asyncHandler will only handle unhandled errors that are not caught by the internal try-catch
+//! asyncHandler's .catch() will pass the error to next(err).
+
+
+
+
+
+
+
 
 
 
