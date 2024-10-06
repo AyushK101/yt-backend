@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js" 
 import { ApiResponse } from "../utils/ApiResponse.js" 
 import jwt from "jsonwebtoken" 
+import { cloudinaryDeleteImg } from "../utils/cloudinaryDeleteImg.js"
 
 
 const generateAccessAndRefreshToken = async function(userId) {
@@ -281,6 +282,8 @@ const updateAccountDetails = asyncHandler( async(req, res)=>{
 
 const updateUserAvatar = asyncHandler( async (req, res)=>{
   //route +> ('/update-user-avatar',multer, jwtVerify )
+  const prevAvatarUrl = req.user?.avatar
+
   const avatarLocalPath = req?.file?.path
   if(!avatarLocalPath)
     throw new ApiError(400,"avatar file not found")
@@ -301,6 +304,13 @@ const updateUserAvatar = asyncHandler( async (req, res)=>{
     }
   ).select("-password")
 
+  const deleteAvatarResponse = await cloudinaryDeleteImg(prevAvatarUrl)
+  if(deleteAvatarResponse.result != 'ok')
+    throw new ApiError(
+      400,
+      "failed to delete prevAvatar from cloudinary"
+    )
+  console.log(`deleteAvatarResponse: `,deleteAvatarResponse)
 
   return res.status(200)
   .json(new ApiResponse(
@@ -309,11 +319,11 @@ const updateUserAvatar = asyncHandler( async (req, res)=>{
   ),
   "avatar updated successfully"
   )
-
-  
 })
 
 const updateUserCoverImage = asyncHandler( async(req, res)=>{
+  const prevCoverImageUrl = req.user?.coverImage
+
   const coverImageLocalPath = req?.file?.coverImage
   if(!coverImageLocalPath)
     throw new ApiError(400,"coverImage file is missing")
@@ -333,6 +343,14 @@ const updateUserCoverImage = asyncHandler( async(req, res)=>{
       new: true
     }
   ).select("-password")
+
+  const deleteCoverImageResponse = await cloudinaryDeleteImg(prevCoverImageUrl)
+  if(deleteCoverImageResponse.result != 'ok')
+    throw new ApiError(
+      400,
+      "failed to delete prevCoverImage from cloudinary"
+    )
+  console.log(`deleteCoverImageResponse: `,deleteCoverImageResponse)
 
   return res.status(200)
   .json(new ApiResponse(
