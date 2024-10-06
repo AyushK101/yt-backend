@@ -11,3 +11,10 @@
 - __`db is always in another continent`-Hitesh Choudhry 📏__
 6. db connection  
 - __change in .env, reload nodemon required.__ 
+
+```text
+- token - user don't have to login on ever request
+- accessToken - short lived
+- if accessToken expires -> 404 to frontend then, frontend hit a endpoint where it refresh the accessToken with the help of refresh token.
+```
+

@@ -29,7 +29,7 @@ app.use(express.urlencoded({
 //store user static data; folder->public
 app.use(express.static("public"))
 
-app.use(cookieParser({}))
+app.use(cookieParser())
 
 
 //routes

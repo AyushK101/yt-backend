@@ -6,6 +6,7 @@ class ApiError extends Error {
         stack="",
     ){
         super(message)
+        this.inside = "inside ApiError"
         this.statusCode=statusCode,
         this.data=null
         this.message=message
