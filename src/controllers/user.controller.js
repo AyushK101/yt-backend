@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js" 
 import jwt from "jsonwebtoken" 
 import { cloudinaryDeleteImg } from "../utils/cloudinaryDeleteImg.js"
+import mongoose from "mongoose"
 
 
 const generateAccessAndRefreshToken = async function(userId) {
@@ -440,6 +441,61 @@ const getUserChannelProfile = asyncHandler( async(req, res)=>{
 
 })
 
+const getWatchHistory = asyncHandler( async(req, res)=>{
+  
+  const user = User.aggregate([
+    {
+      $match: {
+        _id: mongoose.Types.ObjectId(req.user._id) // as mongoose don't implicitly convert idString to objectId(string) in aggregate.
+      }
+    },
+    {
+      $lookup: { //  result of this lookup will embed the related video documents into the watchHistory array.
+        from : "videos",
+        localField: "watchHistory",
+        foreignField: "_id",
+        as: "watchHistory",
+        pipeline: [ 
+          {
+            $lookup: { // After this lookup, the watchHistory array will now contain an owner field for each video, which is an array of one object, containing the selected fields.
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [ 
+                {
+                  $project: {
+                    fullName: 1,
+                    username: 1,
+                    avatar: 1,
+                  }
+                }
+              ]
+            }
+          },
+          {
+            $addFields: {
+              owner: {
+                $first: "$owner" // extract first element(obj) of owner array and then replace owner with that.  
+              }
+            }
+          }
+        ]
+      }
+    }
+  ])
+
+  console.log(`user in getWatchHistory: ${user}`)
+
+  return res.status(200)
+  .json(
+    new ApiResponse(
+      200,
+      user[0].watchHistory
+    ),
+    "user's watch history fetched successfully"
+  )
+})
 
 
 
@@ -453,6 +509,7 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateUserCoverImage,
-  getUserChannelProfile
+  getUserChannelProfile,
+  getWatchHistory,
 
  } 

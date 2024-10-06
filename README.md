@@ -17,4 +17,8 @@
 - accessToken - short lived
 - if accessToken expires -> 404 to frontend then, frontend hit a endpoint where it refresh the accessToken with the help of refresh token.
 ```
+```
+- mongoose internally converts string '_id' to object(string) whenever we use _id field . 
+- but in aggregation pipeline it won't convert .
+```
 
