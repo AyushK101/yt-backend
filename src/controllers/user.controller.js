@@ -233,11 +233,9 @@ const changeCurrentUserPassword = asyncHandler( async (req, res)=>{
   .json(new ApiResponse(
     200,
     newPassword,
+    "password updated successfully"
   ),
-  "password updated successfully"
   ) 
-
-
 })
 
 const getCurrentUser = asyncHandler( async (req, res)=>{
@@ -252,8 +250,8 @@ const getCurrentUser = asyncHandler( async (req, res)=>{
 })
 
 const updateAccountDetails = asyncHandler( async(req, res)=>{
-  const {fullName, email, } = req.body
-  if( !fullName || !email)
+  const {fullName, email } = req.body
+  if( !fullName && !email)
     throw new ApiError(400,"all fields are required",)
 
   const updatedUser = await User.findByIdAndUpdate(
@@ -316,16 +314,17 @@ const updateUserAvatar = asyncHandler( async (req, res)=>{
   return res.status(200)
   .json(new ApiResponse(
     200,
-    user
+    user,
+    "avatar updated successfully"
   ),
-  "avatar updated successfully"
   )
 })
 
 const updateUserCoverImage = asyncHandler( async(req, res)=>{
   const prevCoverImageUrl = req.user?.coverImage
 
-  const coverImageLocalPath = req?.file?.coverImage
+  const coverImageLocalPath = req?.file?.path
+  console.log(coverImageLocalPath)
   if(!coverImageLocalPath)
     throw new ApiError(400,"coverImage file is missing")
 
@@ -356,9 +355,9 @@ const updateUserCoverImage = asyncHandler( async(req, res)=>{
   return res.status(200)
   .json(new ApiResponse(
     200,
-    user
+    user,
+    "coverImage updated successfully"
   ),
-  "coverImage updated successfully"
   )
 })
 
@@ -435,7 +434,7 @@ const getUserChannelProfile = asyncHandler( async(req, res)=>{
   return res.status(200)
   .json(new ApiResponse(
     200,
-    channel[0],
+    channel?.[0],
     "user channel fetched successfully"
   ))
 
@@ -446,7 +445,7 @@ const getWatchHistory = asyncHandler( async(req, res)=>{
   const user = User.aggregate([
     {
       $match: {
-        _id: mongoose.Types.ObjectId(req.user._id) // as mongoose don't implicitly convert idString to objectId(string) in aggregate.
+        _id: new mongoose.Types.ObjectId(req.user._id) // as mongoose don't implicitly convert idString to objectId(string) in aggregate.
       }
     },
     {
@@ -485,15 +484,15 @@ const getWatchHistory = asyncHandler( async(req, res)=>{
     }
   ])
 
-  console.log(`user in getWatchHistory: ${user}`)
+  console.log(`user in getWatchHistory:`,user)
 
   return res.status(200)
   .json(
     new ApiResponse(
       200,
-      user[0].watchHistory
+      user[0]?.watchHistory || "watch history is empty" ,
+      "user's watch history fetched successfully"
     ),
-    "user's watch history fetched successfully"
   )
 })
 
