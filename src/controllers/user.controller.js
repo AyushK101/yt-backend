@@ -164,7 +164,7 @@ const logoutUser = asyncHandler( async function(req, res) {
   .json(new ApiResponse(200,{},"User logged out successfully"))
 })
 
-const refreshToken = asyncHandler( async (req, res)=>{
+const refreshAccessToken = asyncHandler( async (req, res)=>{
   // taking refreshToken from cookie of user's request
   // find user with the refresh token in db
   // if user is not found give register route
@@ -503,7 +503,7 @@ export {
   registerUser,
   loginUser,
   logoutUser,
-  refreshToken,
+  refreshAccessToken,
   getCurrentUser,
   changeCurrentUserPassword,
   updateAccountDetails,

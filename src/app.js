@@ -33,9 +33,9 @@ app.use(cookieParser())
 
 
 //routes
-import userRouter from './routes/user.routes.js'
+import router from './routes/user.routes.js'
 //routes declaration
-app.use("/api/v1/users", userRouter)
+app.use("/api/v1/users", router)
 
 
 app.use((err, req, res, next) => {
