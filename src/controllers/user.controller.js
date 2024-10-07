@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js" 
 import { ApiResponse } from "../utils/ApiResponse.js" 
 import jwt from "jsonwebtoken" 
-import { cloudinaryDeleteImg } from "../utils/cloudinaryDeleteImg.js"
+import { cloudinaryDelete } from "../utils/cloudinaryDelete.js"
 import mongoose from "mongoose"
 
 
@@ -303,7 +303,7 @@ const updateUserAvatar = asyncHandler( async (req, res)=>{
     }
   ).select("-password")
 
-  const deleteAvatarResponse = await cloudinaryDeleteImg(prevAvatarUrl)
+  const deleteAvatarResponse = await cloudinaryDelete(prevAvatarUrl)
   if(deleteAvatarResponse.result != 'ok')
     throw new ApiError(
       400,
@@ -344,7 +344,7 @@ const updateUserCoverImage = asyncHandler( async(req, res)=>{
     }
   ).select("-password")
 
-  const deleteCoverImageResponse = await cloudinaryDeleteImg(prevCoverImageUrl)
+  const deleteCoverImageResponse = await cloudinaryDelete(prevCoverImageUrl)
   if(deleteCoverImageResponse.result != 'ok')
     throw new ApiError(
       400,
