@@ -130,6 +130,7 @@ const getVideos = asyncHandler( async (req, res)=>{
 
 })
 
+//! whenever someone click on video increase view of that video by one 
 const getVideoById = asyncHandler( async(req, res)=>{
   // take id of the video clicked by user from grid of videos displayed
   const { videoId } = req.params
@@ -184,7 +185,9 @@ const updateVideo = asyncHandler( async(req, res)=>{
 
 })
 
-
+const updateThumbnail = asyncHandler( async (req,res)=>{
+  res.send("soon")
+})
 
 
 
